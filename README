@@ -1,0 +1,16 @@
+A standalone version of the extented QStandardPaths class that provides an XDG-compliant alt mode on Mac.
+
+Also provided is a small module that provides functions used in Qt 5.9 and missing from Mac OS X 10.9 .
+
+QSP is currently based on Qt 5.8.0 and configured to build on OS X 10.9 against Qt 5.9
+(tested with 5.9.1 copied from a more recent system).
+
+Running Qt 5.9 apps on 10.9 requires the use of the osx-integration plugins
+(github.com/RJVB/osx-integration) configured as (assuming KF5 ports are installed
+in /opt/local via my macstrop repo, built against the qt5-kde port):
+
+> cd /path/to/osxintegration
+> mkdir build && cd build
+> cmake -DQMAKE_EXECUTABLE=/path/to/qt/5.9.x/clang_64/bin/qmake -DBUILD_KDE_THEME_PLUGIN=ON ../ -DCMAKE_PREFIX_PATH=/path/to/qt/5.9.x/clang_64/lib/cmake/;/opt/local/lib/cmake/Modules
+
+(use -DBUILD_KDE_THEME_PLUGIN=OFF to exclude all KF5 support and dependencies)
