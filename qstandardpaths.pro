@@ -1,11 +1,9 @@
 TEMPLATE = lib
+CONFIG += plugin
 QT += core core-private
 
 TARGET = qextstandardpaths
 
-# QMAKE_CFLAGS += -fvisibility=default
-# QMAKE_CXXFLAGS += -fvisibility=default
-# QMAKE_OBJCFLAGS += -fvisibility=default
 QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 
 SOURCES += \
