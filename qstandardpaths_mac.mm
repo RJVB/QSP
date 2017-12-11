@@ -264,7 +264,7 @@ static QString xdgRuntimeDir()
             }
         }
     } else {
-        qWarning("QStandardPaths: XDG_RUNTIME_DIR is set, using '%s'", qPrintable(xdgRTDir));
+        qDebug("QStandardPaths: XDG_RUNTIME_DIR is set, using '%s'", qPrintable(xdgRTDir));
     }
     // "The directory MUST be owned by the user"
     QFileInfo fileInfo(xdgRTDir);
