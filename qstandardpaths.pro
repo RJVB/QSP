@@ -1,6 +1,6 @@
 TEMPLATE = lib
 CONFIG += plugin
-QT += core core-private
+QT += core core-private bootstrap-private
 
 TARGET = qextstandardpaths
 

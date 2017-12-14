@@ -54,8 +54,6 @@
 
 #import <Foundation/Foundation.h>
 
-#include <pwd.h>
-
 QT_BEGIN_NAMESPACE
 
 static QString pathForDirectory(NSSearchPathDirectory directory,
@@ -249,9 +247,8 @@ static QString xdgRuntimeDir()
     // http://standards.freedesktop.org/basedir-spec/latest/
     QString xdgRTDir = QFile::decodeName(qgetenv("XDG_RUNTIME_DIR"));
     if (xdgRTDir.isEmpty()) {
-        struct passwd *pw = 0;
-        pw = getpwuid(myUid);
-        const QString userName = pw? QFile::decodeName(QByteArray(pw->pw_name)) : QString();
+//         QFileSystemEngine::resolveUserName() is in libQt5Bootstrap
+        const QString userName = QFileSystemEngine::resolveUserName(myUid);
         // NSTemporaryDirectory() returns the default $TMPDIR value, regardless of its current setting,
         // which is more in line with XDG_RUNTIME_DIR requirements.
         xdgRTDir = QString::fromNSString(NSTemporaryDirectory()) + QLatin1String("runtime-") + userName;
@@ -264,7 +261,7 @@ static QString xdgRuntimeDir()
             }
         }
     } else {
-        qDebug("QStandardPaths: XDG_RUNTIME_DIR is set, using '%s'", qPrintable(xdgRTDir));
+        qWarning("QStandardPaths: XDG_RUNTIME_DIR is set, using '%s'", qPrintable(xdgRTDir));
     }
     // "The directory MUST be owned by the user"
     QFileInfo fileInfo(xdgRTDir);
@@ -416,13 +413,14 @@ QStringList QStandardPaths::standardLocations(StandardLocation type)
         CFBundleRef mainBundle = CFBundleGetMainBundle();
         if (mainBundle) {
             CFURLRef bundleUrl = CFBundleCopyBundleURL(mainBundle);
-            CFStringRef cfBundlePath = CFURLCopyPath(bundleUrl);
+            CFStringRef cfBundlePath = CFURLCopyFileSystemPath(bundleUrl, kCFURLPOSIXPathStyle);
             QString bundlePath = QString::fromCFString(cfBundlePath);
             CFRelease(cfBundlePath);
             CFRelease(bundleUrl);
 
             CFURLRef resourcesUrl = CFBundleCopyResourcesDirectoryURL(mainBundle);
-            CFStringRef cfResourcesPath = CFURLCopyPath(resourcesUrl);
+            CFStringRef cfResourcesPath = CFURLCopyFileSystemPath(resourcesUrl,
+                kCFURLPOSIXPathStyle);
             QString resourcesPath = QString::fromCFString(cfResourcesPath);
             CFRelease(cfResourcesPath);
             CFRelease(resourcesUrl);
