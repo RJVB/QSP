@@ -4,6 +4,9 @@
 **
 ****************************************************************************/
 
+// #include <exception>
+// #include <objc/objc-exception.h>
+
 #include <qglobal.h>
 
 #import <CoreFoundation/CoreFoundation.h>
@@ -53,3 +56,69 @@ typedef CGFloat NSFontWeight;
 
 @end
 #endif
+
+#if QT_MAC_DEPLOYMENT_TARGET_BELOW(__MAC_10_10, __IPHONE_NA)
+
+#warning "providing [NSWindow setTitlebarAppearsTransparent:]"
+
+@interface NSWindow (missing)
++ (void) setTitlebarAppearsTransparent:(BOOL)enabled;
++ (BOOL) titlebarAppearsTransparent;
+@end
+
+@implementation NSWindow (missing)
+
++ (void) setTitlebarAppearsTransparent:(BOOL)enabled
+{
+    return;
+}
+
++ (BOOL) titlebarAppearsTransparent
+{
+    return false;
+}
+
+@end
+
+@interface NSPanel (missing)
++ (void) setTitlebarAppearsTransparent:(BOOL)enabled;
++ (BOOL) titlebarAppearsTransparent;
+@end
+
+@implementation NSPanel (missing)
+
++ (void) setTitlebarAppearsTransparent:(BOOL)enabled
+{
+    return;
+}
+
++ (BOOL) titlebarAppearsTransparent
+{
+    return false;
+}
+
+@end
+#endif
+
+// static void uncaughtExceptionHandler(NSException *e)
+// {
+//     NSArray *stack = [e callStackReturnAddresses];
+//     NSLog(@"Uncaught exception: %@", e);
+//     NSLog(@"Stack trace: %@", stack);
+// }
+// 
+// static void cpp_terminate()
+// {
+//     NSLog(@"Aborting on uncaught exception");
+//     abort();
+// }
+// 
+// __attribute__((constructor)) void missing_OS_functions_init()
+// {
+//     [NSApplication sharedApplication];
+//     objc_setUncaughtExceptionHandler(uncaughtExceptionHandler);
+//     NSSetUncaughtExceptionHandler(uncaughtExceptionHandler);
+//     NSLog(@"Uncaught objc exception handler: %p (%p)", NSGetUncaughtExceptionHandler(), uncaughtExceptionHandler);
+//     std::set_terminate(cpp_terminate);
+//     std::set_unexpected(cpp_terminate);
+// }
